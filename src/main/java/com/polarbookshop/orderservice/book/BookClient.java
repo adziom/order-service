@@ -5,6 +5,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 @Component
 public class BookClient {
 
@@ -21,6 +23,7 @@ public class BookClient {
                 .uri(BOOKS_ROOT_API + isbn)
                 .retrieve()
                 .bodyToMono(Book.class)
+                .timeout(Duration.ofSeconds(3), Mono.empty())
                 .onErrorResume(WebClientResponseException.NotFound.class, exception -> Mono.empty());
     }
 }
